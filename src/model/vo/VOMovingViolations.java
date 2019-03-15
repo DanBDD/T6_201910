@@ -94,7 +94,10 @@ public class VOMovingViolations implements Comparable<VOMovingViolations>{
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
+	
+	public String toString(){
+		return "Infraccion " + darFecha() + " " + darObjectID();
+	}
 
 
 }

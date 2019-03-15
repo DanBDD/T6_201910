@@ -54,10 +54,6 @@ public class ArregloDinamico<T>{
 		
 		return elems[pos];
 	}
-	public void cambiarElementoEnPos(T dato, int pos)
-	{
-		
-	}
 
 	
 

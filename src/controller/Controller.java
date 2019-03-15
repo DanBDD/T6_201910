@@ -118,20 +118,29 @@ public class Controller {
 	}
 	public int loadMovingViolations() {
 		int contador = 0;
-		Gson gson = new Gson();
-		BufferedReader br = null;
-		StringBuilder sb = new StringBuilder();
-		try {
-			br = new BufferedReader(new FileReader(rutaEnero));
-			Result resultado = gson.fromJson(br, Result.class);
-			System.out.println(resultado);
+		JsonReader reader;
+		int obID = 0;
+		String loc = null;
+		int addID = 0;
+		int amt = 0;
+		String date = null;
+		String code = null;
+		JsonParser parser = new JsonParser();
+		try{
+			JsonArray ja = (JsonArray) parser.parse(new FileReader(rutaEnero));
+			for(int i = 0; i<ja.size(); i++){
+				JsonObject actual = (JsonObject) ja.get(i);
+				if(actual.get("OBJECTID") != null){
+					obID = actual.get("OBJECTID").getAsInt();
+					System.out.println(obID);
+				}
+			}
 			
-		} 
-		catch (IOException e) {
-
-			e.printStackTrace();
 		}
-		return contador;
+		catch(IOException e){
+			e.getMessage();
+		}
+		return arreglo.darTamano();
 	}
 
 
