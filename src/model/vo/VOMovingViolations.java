@@ -31,7 +31,7 @@ public class VOMovingViolations implements Comparable<VOMovingViolations>{
 	/**
 	 * Atributo que da el identificador de la infraccion.
 	 */
-	private int ObjectID;
+	private int objectID;
 
 	/**
 	 * Atributo que da la fecha de la infracci�n
@@ -49,11 +49,14 @@ public class VOMovingViolations implements Comparable<VOMovingViolations>{
 	 * @param pAddress direccion de la infracci�n
 
 	 */
-	public VOMovingViolations(String pIssueDate, int pAddress, String pLocation){
+	public VOMovingViolations(int pObjID, String pLoc, int pAddID, int pAMT, String pDate, String pCode){
 
-		location = pLocation;
-		addressID = pAddress;
-		ticketIssueDate = pIssueDate;
+		objectID = pObjID;
+		location = pLoc;
+		addressID = pAddID;
+		fineAMT = pAMT;
+		ticketIssueDate = pDate;
+		violationCode = pCode;
 
 	}
 
@@ -66,6 +69,15 @@ public class VOMovingViolations implements Comparable<VOMovingViolations>{
 	}
 	public String darFecha(){
 		return ticketIssueDate;
+	}
+	public String darViolationCode(){
+		return violationCode;
+	}
+	public int darAMT(){
+		return fineAMT;
+	}
+	public int darObjectID(){
+		return objectID;
 	}
 	private static LocalDateTime convertirFecha_Hora_LDT(String fechaHora)
 	{
