@@ -93,7 +93,7 @@ public class SeparateChaining<K extends Comparable <K>, V> implements IHash<K,V>
 			for (K key : st[i].keys())
 				queue.enqueue(key);
 		}
-		return queue;
+		return (Iterator<K>) queue;
 	}
 
 }

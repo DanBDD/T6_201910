@@ -128,6 +128,6 @@ public class LinearProbing<K extends Comparable <K>, V> implements IHash<K,V>{
 		  Cola<K> queue = new Cola<K>();
 	        for (int i = 0; i < m; i++)
 	            if (keys[i] != null) queue.enqueue(keys[i]);
-	        return queue;
+	        return (Iterator<K>) queue;
 	}
 }
