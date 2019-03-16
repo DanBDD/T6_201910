@@ -2,9 +2,9 @@ package model.data_structures;
 
 import java.util.Iterator;
 /**
- * Código tomado del libro Algorithms de Wayne y Sedgweick.
+ * Cï¿½digo tomado del libro Algorithms de Wayne y Sedgweick.
  *
- * @param <K> Llave para identificar posición para guardar el objeto.
+ * @param <K> Llave para identificar posiciï¿½n para guardar el objeto.
  * @param <V> Objeto a guardar
  */
 public class LinearProbing<K extends Comparable <K>, V> implements IHash<K,V>{
@@ -22,8 +22,8 @@ public class LinearProbing<K extends Comparable <K>, V> implements IHash<K,V>{
     public LinearProbing(int capacity) {
         m = capacity;
         n = 0;
-        keys = (K[])   new Object[m];
-        vals = (V[]) new Object[m];
+        keys = (K[])   new Comparable[m];
+        vals = (V[]) new Comparable[m];
     }
 
     /**
@@ -33,6 +33,10 @@ public class LinearProbing<K extends Comparable <K>, V> implements IHash<K,V>{
      */
     public int size() {
         return n;
+    }
+    public int m()
+    {
+    	return m;
     }
 
     // hash function for keys - returns value between 0 and M-1
@@ -128,6 +132,6 @@ public class LinearProbing<K extends Comparable <K>, V> implements IHash<K,V>{
 		  Cola<K> queue = new Cola<K>();
 	        for (int i = 0; i < m; i++)
 	            if (keys[i] != null) queue.enqueue(keys[i]);
-	        return (Iterator<K>) queue;
+	        return queue.iterator();
 	}
 }
