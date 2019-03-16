@@ -96,7 +96,7 @@ public class VOMovingViolations implements Comparable<VOMovingViolations>{
 	}
 	
 	public String toString(){
-		return "Infraccion " + darFecha() + " " + darObjectID();
+		return "Infraccion " + darFecha() + " " + darObjectID() + " " + darAMT() + " " + addressID + " " + darViolationCode();
 	}
 
 

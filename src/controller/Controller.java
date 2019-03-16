@@ -122,20 +122,218 @@ public class Controller {
 		int obID = 0;
 		String loc = null;
 		int addID = 0;
+		String address = null;
 		int amt = 0;
 		String date = null;
 		String code = null;
-		JsonParser parser = new JsonParser();
+		
 		try{
+			JsonParser parser = new JsonParser();
 			JsonArray ja = (JsonArray) parser.parse(new FileReader(rutaEnero));
-			for(int i = 0; i<ja.size(); i++){
+			for(int i = 0; ja != null && i<ja.size(); i++){
 				JsonObject actual = (JsonObject) ja.get(i);
 				if(actual.get("OBJECTID") != null){
-					obID = actual.get("OBJECTID").getAsInt();
-					System.out.println(obID);
+					obID = actual.get("OBJECTID").getAsInt();			
+				}
+				if(actual.get("LOCATION") != null){
+					loc = actual.get("LOCATION").getAsString();
+				}
+				if(actual.get("ADDRESS_ID") != null){
+					if(actual.get("ADDRESS_ID").toString().equals("null")){
+						address = "0";
+						addID = Integer.parseInt(address);
+					}
+					else{
+						address = actual.get("ADDRESS_ID").getAsString();
+						addID = Integer.parseInt(address);
+					}
+				}
+				if(actual.get("FINEAMT") != null){
+					amt = actual.get("FINEAMT").getAsInt();
+				}
+				if(actual.get("TICKETISSUEDATE") != null){
+					date = actual.get("TICKETISSUEDATE").getAsString();
+				}
+				if(actual.get("VIOLATIONCODE") != null){
+					code = actual.get("VIOLATIONCODE").getAsString();
+				}
+
+				if(obID != 0 && loc != null && addID != -1 && amt != 0 && date !=null && code != null){
+					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code));
+
 				}
 			}
-			
+			JsonParser parser1 = new JsonParser();
+			JsonArray ja1 = (JsonArray) parser1.parse(new FileReader(rutaFebrero));
+			for(int i = 0; ja1 != null && i<ja1.size(); i++){
+				JsonObject actual = (JsonObject) ja.get(i);
+				if(actual.get("OBJECTID") != null){
+					obID = actual.get("OBJECTID").getAsInt();			
+				}
+				if(actual.get("LOCATION") != null){
+					loc = actual.get("LOCATION").getAsString();
+				}
+				if(actual.get("ADDRESS_ID") != null){
+					if(actual.get("ADDRESS_ID").toString().equals("null")){
+						address = "0";
+						addID = Integer.parseInt(address);
+					}
+					else{
+						address = actual.get("ADDRESS_ID").getAsString();
+						addID = Integer.parseInt(address);
+					}
+				}
+				if(actual.get("FINEAMT") != null){
+					amt = actual.get("FINEAMT").getAsInt();
+				}
+				if(actual.get("TICKETISSUEDATE") != null){
+					date = actual.get("TICKETISSUEDATE").getAsString();
+				}
+				if(actual.get("VIOLATIONCODE") != null){
+					code = actual.get("VIOLATIONCODE").getAsString();
+				}
+
+				if(obID != 0 && loc != null && addID != -1 && amt != 0 && date !=null && code != null){
+					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code));
+
+				}
+			}
+//			JsonArray ja2 = (JsonArray) parser.parse(new FileReader(rutaMarzo));
+//			for(int i = 0; ja2 != null && i<ja2.size(); i++){
+//				JsonObject actual = (JsonObject) ja.get(i);
+//				if(actual.get("OBJECTID") != null){
+//					obID = actual.get("OBJECTID").getAsInt();			
+//				}
+//				if(actual.get("LOCATION") != null){
+//					loc = actual.get("LOCATION").getAsString();
+//				}
+//				if(actual.get("ADDRESS_ID") != null){
+//					if(actual.get("ADDRESS_ID").toString().equals("null")){
+//						address = "0";
+//						addID = Integer.parseInt(address);
+//					}
+//					else{
+//						address = actual.get("ADDRESS_ID").getAsString();
+//						addID = Integer.parseInt(address);
+//					}
+//				}
+//				if(actual.get("FINEAMT") != null){
+//					amt = actual.get("FINEAMT").getAsInt();
+//				}
+//				if(actual.get("TICKETISSUEDATE") != null){
+//					date = actual.get("TICKETISSUEDATE").getAsString();
+//				}
+//				if(actual.get("VIOLATIONCODE") != null){
+//					code = actual.get("VIOLATIONCODE").getAsString();
+//				}
+//				
+//				if(obID != 0 && loc != null && addID != -1 && amt != 0 && date !=null && code != null){
+//					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code));
+//				
+//				}
+//			}
+//			JsonArray ja3 = (JsonArray) parser.parse(new FileReader(rutaAbril));
+//			for(int i = 0; ja3 != null && i<ja3.size(); i++){
+//				JsonObject actual = (JsonObject) ja.get(i);
+//				if(actual.get("OBJECTID") != null){
+//					obID = actual.get("OBJECTID").getAsInt();			
+//				}
+//				if(actual.get("LOCATION") != null){
+//					loc = actual.get("LOCATION").getAsString();
+//				}
+//				if(actual.get("ADDRESS_ID") != null){
+//					if(actual.get("ADDRESS_ID").toString().equals("null")){
+//						address = "0";
+//						addID = Integer.parseInt(address);
+//					}
+//					else{
+//						address = actual.get("ADDRESS_ID").getAsString();
+//						addID = Integer.parseInt(address);
+//					}
+//				}
+//				if(actual.get("FINEAMT") != null){
+//					amt = actual.get("FINEAMT").getAsInt();
+//				}
+//				if(actual.get("TICKETISSUEDATE") != null){
+//					date = actual.get("TICKETISSUEDATE").getAsString();
+//				}
+//				if(actual.get("VIOLATIONCODE") != null){
+//					code = actual.get("VIOLATIONCODE").getAsString();
+//				}
+//				
+//				if(obID != 0 && loc != null && addID != -1 && amt != 0 && date !=null && code != null){
+//					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code));
+//				
+//				}
+//			}
+//			JsonArray ja4 = (JsonArray) parser.parse(new FileReader(rutaMayo));
+//			for(int i = 0; ja4 != null && i<ja4.size(); i++){
+//				JsonObject actual = (JsonObject) ja.get(i);
+//				if(actual.get("OBJECTID") != null){
+//					obID = actual.get("OBJECTID").getAsInt();			
+//				}
+//				if(actual.get("LOCATION") != null){
+//					loc = actual.get("LOCATION").getAsString();
+//				}
+//				if(actual.get("ADDRESS_ID") != null){
+//					if(actual.get("ADDRESS_ID").toString().equals("null")){
+//						address = "0";
+//						addID = Integer.parseInt(address);
+//					}
+//					else{
+//						address = actual.get("ADDRESS_ID").getAsString();
+//						addID = Integer.parseInt(address);
+//					}
+//				}
+//				if(actual.get("FINEAMT") != null){
+//					amt = actual.get("FINEAMT").getAsInt();
+//				}
+//				if(actual.get("TICKETISSUEDATE") != null){
+//					date = actual.get("TICKETISSUEDATE").getAsString();
+//				}
+//				if(actual.get("VIOLATIONCODE") != null){
+//					code = actual.get("VIOLATIONCODE").getAsString();
+//				}
+//				
+//				if(obID != 0 && loc != null && addID != -1 && amt != 0 && date !=null && code != null){
+//					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code));
+//				
+//				}
+//			}
+//			JsonArray ja5 = (JsonArray) parser.parse(new FileReader(rutaJunio));
+//			for(int i = 0; ja5 != null && i<ja5.size(); i++){
+//				JsonObject actual = (JsonObject) ja.get(i);
+//				if(actual.get("OBJECTID") != null){
+//					obID = actual.get("OBJECTID").getAsInt();			
+//				}
+//				if(actual.get("LOCATION") != null){
+//					loc = actual.get("LOCATION").getAsString();
+//				}
+//				if(actual.get("ADDRESS_ID") != null){
+//					if(actual.get("ADDRESS_ID").toString().equals("null")){
+//						address = "0";
+//						addID = Integer.parseInt(address);
+//					}
+//					else{
+//						address = actual.get("ADDRESS_ID").getAsString();
+//						addID = Integer.parseInt(address);
+//					}
+//				}
+//				if(actual.get("FINEAMT") != null){
+//					amt = actual.get("FINEAMT").getAsInt();
+//				}
+//				if(actual.get("TICKETISSUEDATE") != null){
+//					date = actual.get("TICKETISSUEDATE").getAsString();
+//				}
+//				if(actual.get("VIOLATIONCODE") != null){
+//					code = actual.get("VIOLATIONCODE").getAsString();
+//				}
+//				
+//				if(obID != 0 && loc != null && addID != -1 && amt != 0 && date !=null && code != null){
+//					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code));
+//				
+//				}
+//			}
 		}
 		catch(IOException e){
 			e.getMessage();
