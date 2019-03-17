@@ -24,6 +24,10 @@ import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 import jdk.nashorn.internal.parser.JSONParser;
 import model.data_structures.ArregloDinamico;
+import model.data_structures.Comparaciones;
+import model.data_structures.LinearProbing;
+import model.data_structures.SeparateChaining;
+import model.util.Sort;
 import model.vo.VOMovingViolations;
 import view.MovingViolationsManagerView;
 
@@ -63,21 +67,19 @@ public class Controller {
 	public static final String rutaJunio = "./data/Moving_Violations_Issued_in_June_2018.json";
 
 	private ArregloDinamico<VOMovingViolations> arreglo;
+	private LinearProbing<Integer, ArregloDinamico<VOMovingViolations>> linear;
+	private SeparateChaining<Integer, ArregloDinamico<VOMovingViolations>> separate;
 
 	public Controller() {
 		view = new MovingViolationsManagerView();
 		arreglo=new ArregloDinamico<VOMovingViolations>(160000);
-
-
+		linear= new LinearProbing<>(101);
+		separate =new SeparateChaining<>(101);
 	}
 
 	public void run() {
 		Scanner sc = new Scanner(System.in);
 		boolean fin=false;
-		int nMuestra = 0;
-		long startTime = 0;
-		long endTime = 0;
-		long duration = 0;
 		int nDatos = 0;
 		while(!fin)
 		{
@@ -90,24 +92,26 @@ public class Controller {
 			case 0:
 				nDatos = this.loadMovingViolations();
 				view.printMessage("Datos cargados, total de datos: " + nDatos);
+				
+				//Funciona el cargar y estan ordenadas.
+				this.agregarHash(nDatos);
 				break;
-				//			case 1:
-				//				view.printMessage("Dar tamaNo de la muestra: ");
-				//				nMuestra = sc.nextInt();
-				//				muestra = this.generarMuestra( nMuestra );
-				//				int tam = muestra.length;
-				//				view.printMessage("Muestra generada, tamano: " + tam);
-				//				break;
-				//			case 2: 
-				//				if ( nMuestra > 0 && muestra != null)
-				//				{    
-				//					view.printDatosMuestra( nMuestra, muestra);
-				//				}
-				//				else
-				//				{
-				//					view.printMessage("Muestra invalida");
-				//				}
-				//				break;
+				//							case 1:
+				//								view.printMessage("Ingresar AdressID: ");
+				//								nMuestra = sc.nextInt();
+				//								this.buscarLinarP(nMuestra);
+				//								view.printMessage("Muestra generada, tamano: " + tam);
+				//								break;
+				//							case 2: 
+				//								if ( nMuestra > 0 && muestra != null)
+				//								{    
+				//									view.printDatosMuestra( nMuestra, muestra);
+				//								}
+				//								else
+				//								{
+				//									view.printMessage("Muestra invalida");
+				//								}
+				//								break;
 
 			case 3:	
 				fin=true;
@@ -116,9 +120,38 @@ public class Controller {
 			}
 		}
 	}
+	private void agregarHash(int n) {
+		Comparable<VOMovingViolations>[] temp = new Comparable[n];	
+
+		int pos=0;
+		while(pos<n)
+		{
+			temp[pos] = arreglo.darElem(pos);
+			pos++;
+		}
+		Sort.ordenarMergeSort(temp, Comparaciones.ADDRESSID.comparador , true);
+		VOMovingViolations a=(VOMovingViolations) temp[0];
+		int ID=a.darAddressID();
+		ArregloDinamico<VOMovingViolations> r=new ArregloDinamico<>(1);
+		for(int i=0;i<temp.length;i++)
+		{
+			VOMovingViolations actual=(VOMovingViolations) temp[i];
+			int IDactual=actual.darAddressID();
+			if(ID==IDactual)
+			{
+				r.agregar(actual);
+			}
+			else
+			{
+				linear.put(ID, r);
+				separate.put(ID, r);
+				r=new ArregloDinamico<>(1);
+				ID=IDactual;
+			}
+		}		
+	}
+
 	public int loadMovingViolations() {
-		int contador = 0;
-		JsonReader reader;
 		int obID = 0;
 		String loc = null;
 		int addID = 0;
@@ -126,9 +159,8 @@ public class Controller {
 		int amt = 0;
 		String date = null;
 		String code = null;
-		
+		JsonParser parser = new JsonParser();
 		try{
-			JsonParser parser = new JsonParser();
 			JsonArray ja = (JsonArray) parser.parse(new FileReader(rutaEnero));
 			for(int i = 0; ja != null && i<ja.size(); i++){
 				JsonObject actual = (JsonObject) ja.get(i);
@@ -163,10 +195,9 @@ public class Controller {
 
 				}
 			}
-			JsonParser parser1 = new JsonParser();
-			JsonArray ja1 = (JsonArray) parser1.parse(new FileReader(rutaFebrero));
+			JsonArray ja1 = (JsonArray) parser.parse(new FileReader(rutaFebrero));
 			for(int i = 0; ja1 != null && i<ja1.size(); i++){
-				JsonObject actual = (JsonObject) ja.get(i);
+				JsonObject actual = (JsonObject) ja1.get(i);
 				if(actual.get("OBJECTID") != null){
 					obID = actual.get("OBJECTID").getAsInt();			
 				}
@@ -200,9 +231,7 @@ public class Controller {
 			}
 			JsonArray ja2 = (JsonArray) parser.parse(new FileReader(rutaMarzo));
 			for(int i = 0; ja2 != null && i<ja2.size(); i++){
-				System.out.println(i);
-				System.out.println(ja2.size());
-				JsonObject actual = (JsonObject) ja.get(i);
+				JsonObject actual = (JsonObject) ja2.get(i);
 				if(actual.get("OBJECTID") != null){
 					obID = actual.get("OBJECTID").getAsInt();			
 				}
@@ -228,15 +257,15 @@ public class Controller {
 				if(actual.get("VIOLATIONCODE") != null){
 					code = actual.get("VIOLATIONCODE").getAsString();
 				}
-				
+
 				if(obID != 0 && loc != null && addID != -1 && amt != 0 && date !=null && code != null){
 					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code));
-				
+
 				}
 			}
 			JsonArray ja3 = (JsonArray) parser.parse(new FileReader(rutaAbril));
 			for(int i = 0; ja3 != null && i<ja3.size(); i++){
-				JsonObject actual = (JsonObject) ja.get(i);
+				JsonObject actual = (JsonObject) ja3.get(i);
 				if(actual.get("OBJECTID") != null){
 					obID = actual.get("OBJECTID").getAsInt();			
 				}
@@ -262,15 +291,15 @@ public class Controller {
 				if(actual.get("VIOLATIONCODE") != null){
 					code = actual.get("VIOLATIONCODE").getAsString();
 				}
-				
+
 				if(obID != 0 && loc != null && addID != -1 && amt != 0 && date !=null && code != null){
 					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code));
-				
+
 				}
 			}
 			JsonArray ja4 = (JsonArray) parser.parse(new FileReader(rutaMayo));
 			for(int i = 0; ja4 != null && i<ja4.size(); i++){
-				JsonObject actual = (JsonObject) ja.get(i);
+				JsonObject actual = (JsonObject) ja4.get(i);
 				if(actual.get("OBJECTID") != null){
 					obID = actual.get("OBJECTID").getAsInt();			
 				}
@@ -296,15 +325,15 @@ public class Controller {
 				if(actual.get("VIOLATIONCODE") != null){
 					code = actual.get("VIOLATIONCODE").getAsString();
 				}
-				
+
 				if(obID != 0 && loc != null && addID != -1 && amt != 0 && date !=null && code != null){
 					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code));
-				
+
 				}
 			}
 			JsonArray ja5 = (JsonArray) parser.parse(new FileReader(rutaJunio));
 			for(int i = 0; ja5 != null && i<ja5.size(); i++){
-				JsonObject actual = (JsonObject) ja.get(i);
+				JsonObject actual = (JsonObject) ja5.get(i);
 				if(actual.get("OBJECTID") != null){
 					obID = actual.get("OBJECTID").getAsInt();			
 				}
@@ -330,10 +359,10 @@ public class Controller {
 				if(actual.get("VIOLATIONCODE") != null){
 					code = actual.get("VIOLATIONCODE").getAsString();
 				}
-				
+
 				if(obID != 0 && loc != null && addID != -1 && amt != 0 && date !=null && code != null){
 					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code));
-				
+
 				}
 			}
 		}

@@ -13,7 +13,7 @@ public class TestSeparateChaining extends TestCase{
 	@Before
 	public void setUp()
 	{
-		linear=new SeparateChaining<>(100);
+		linear=new SeparateChaining<>(101);
 		System.out.println("TestSeparateChaining");
 		int contador=0;
 		while(linear.keys().hasNext())

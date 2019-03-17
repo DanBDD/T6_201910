@@ -12,7 +12,7 @@ public class TestLinearProbing extends TestCase{
 	@Before
 	public void setUp()
 	{
-		linear=new LinearProbing<>(100);
+		linear=new LinearProbing<>(101);
 		System.out.println("TestLinearProbing");
 		int contador=0;
 		while(linear.keys().hasNext())
