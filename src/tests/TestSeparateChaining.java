@@ -56,7 +56,7 @@ public class TestSeparateChaining extends TestCase{
 		long endTime = System.currentTimeMillis();
 		long duration = endTime - startTime;
 		double l=(double)duration/10000;
-		System.out.println("Tiempo promedio: "+l+" segundos");
+		System.out.println("Tiempo promedio: "+l+" milisegundos");
 	}
 
 }

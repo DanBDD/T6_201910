@@ -37,14 +37,9 @@ public class TestLinearProbing extends TestCase{
 	@Test
 	public void testSize()
 	{
-		//Tamaño final arreglo
-		//		int contador2=0;
-		//		while(linear.keys().hasNext())
-		//		{
-		//			System.out.println("Inside");
-		//			contador2++;
-		//		}
-		//		assertEquals(contador2, 9999);
+		//		Tamaño final arreglo
+		
+		System.out.println("Tama�o final del arreglo: "+linear.size());
 		System.out.println("Numero de duplas: "+linear.size());
 		System.out.println("Factor de carga final: "+(double)linear.size()/linear.m());
 		long startTime = System.currentTimeMillis();
@@ -55,7 +50,7 @@ public class TestLinearProbing extends TestCase{
 		long endTime = System.currentTimeMillis();
 		long duration = endTime - startTime;
 		double l=(double)duration/10000;
-		System.out.println("Tiempo promedio: "+l+" segundos");
+		System.out.println("Tiempo promedio: "+l+" milisegundos");
 	}
 
 }
