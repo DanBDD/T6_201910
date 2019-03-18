@@ -20,9 +20,12 @@ public class MovingViolationsManagerView
 		System.out.println("---------ISIS 1206 - Estructuras de datos----------");
 		System.out.println("---------------------Taller 6----------------------");
 		System.out.println("0. Cargar datos del cuatrimestre");
-		System.out.println("1. Infracciones con accidente por Address ID (Linear Probing)");
-		System.out.println("2. Infracciones con accidente por Address ID (Separate Chaining)");
-		System.out.println("3. Salir");
+		System.out.println("1. Crear copia");
+		System.out.println("2. Cargar datos en tabla Hash de Linear Probing");
+		System.out.println("3. Cargar datos en tabla Hash de Separate Chaining");
+		System.out.println("4. Buscar por AddressID en LinearProbing");
+		System.out.println("5. Buscar por AddressID en SeparateChaining");
+		System.out.println("6. Salir");
 		System.out.println("Digite el nï¿½mero de opciï¿½n para ejecutar la tarea, luego presione enter: (Ej., 1):");
 
 	}
@@ -31,5 +34,12 @@ public class MovingViolationsManagerView
 		System.out.println(mensaje);
 	}
 
-
+	public void printBusqueda(ArregloDinamico<VOMovingViolations> param) {
+		System.out.println("Resultados de b�squeda: " + param.darTamano());
+		for(int i = 0; i<param.darTamano(); i++) {
+			VOMovingViolations actual = param.darElem(i);
+			System.out.println("Datos: OBJECTID: " + actual.darObjectID() + " LOCATION: " + actual.darLocation() +
+					" TICKETISSUEDATE: " + actual.darFecha() + " VIOLATIONCODE: " +actual.darViolationCode() + " FINEAMT: " + actual.darAMT());
+		}
+	}
 }

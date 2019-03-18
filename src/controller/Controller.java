@@ -69,7 +69,7 @@ public class Controller {
 	private ArregloDinamico<VOMovingViolations> arreglo;
 	private LinearProbing<Integer, ArregloDinamico<VOMovingViolations>> linear;
 	private SeparateChaining<Integer, ArregloDinamico<VOMovingViolations>> separate;
-
+	private Comparable<VOMovingViolations>[ ] temp;
 	public Controller() {
 		view = new MovingViolationsManagerView();
 		arreglo=new ArregloDinamico<VOMovingViolations>(5);
@@ -81,6 +81,7 @@ public class Controller {
 		Scanner sc = new Scanner(System.in);
 		boolean fin=false;
 		int nDatos = 0;
+		int parametro = 0;
 		while(!fin)
 		{
 			view.printMenu();
@@ -93,36 +94,39 @@ public class Controller {
 				nDatos = this.loadMovingViolations();
 				view.printMessage("Datos cargados, total de datos: " + nDatos);
 
-				//Funciona el cargar y estan ordenadas.
-				this.agregarHash(nDatos);
-				System.out.println("L"+linear.size());
-				System.out.println("S"+separate.size());
 				break;
-				//							case 1:
-				//								view.printMessage("Ingresar AdressID: ");
-				//								nMuestra = sc.nextInt();
-				//								this.buscarLinarP(nMuestra);
-				//								view.printMessage("Muestra generada, tamano: " + tam);
-				//								break;
-				//							case 2: 
-				//								if ( nMuestra > 0 && muestra != null)
-				//								{    
-				//									view.printDatosMuestra( nMuestra, muestra);
-				//								}
-				//								else
-				//								{
-				//									view.printMessage("Muestra invalida");
-				//								}
-				//								break;
-
-			case 3:	
+			case 1:
+				this.crearCopia();
+				System.out.println("Tamaño copia: " + temp.length);
+				break;
+			case 2:
+				this.agregarLinearProbing(temp);
+				System.out.println("Tamaño de LinearProbing con Infracciones con accidente: " + linear.size());
+				break;
+			case 3: 
+				
+				this.agregarSeparateChaining(temp);
+				System.out.println("Tamaño de SeparateChaining con Infracciones con accidente: " + separate.size());
+				break;
+			case 4:
+				view.printMessage("Ingrese el AddressID para buscar");
+				parametro = sc.nextInt();
+				view.printBusqueda(this.buscarLinear(parametro));
+	
+				break;
+			case 5:
+				view.printMessage("Ingrese el AddressID para buscar");
+				parametro = sc.nextInt();
+				view.printBusqueda(this.buscarSeparate(parametro));
+				break;
+			case 6:	
 				fin=true;
 				sc.close();
 				break;
 			}
 		}
 	}
-	private void agregarHash(int n) {
+	private void crearCopia () {
 
 		int contador=0;
 		for(int i=0;i<arreglo.darTamano();i++)
@@ -132,37 +136,71 @@ public class Controller {
 				contador++;
 			}
 		}
-		Comparable<VOMovingViolations>[] temp = new Comparable[contador];
+		temp = new Comparable[contador];
 		int pos=0;
-		for(int i=0;i<arreglo.darTamano();i++)
+		for(int j=0;j<arreglo.darTamano();j++)
 		{
-			if(arreglo.darElem(i).darIndicator().equals("Yes"))
+			if(arreglo.darElem(j).darIndicator().equals("Yes"))
 			{
-				temp[pos] = arreglo.darElem(i);
+				temp[pos] = arreglo.darElem(j);
 				pos++;
 			}
 		}
 		Sort.ordenarMergeSort(temp, Comparaciones.ADDRESSID.comparador , true);
-		VOMovingViolations a=(VOMovingViolations) temp[0];
-		int ID=a.darAddressID();
-		ArregloDinamico<VOMovingViolations> r=new ArregloDinamico<>(6);
-		for(int i=0;i<temp.length;i++)
+	}
+
+	public LinearProbing<Integer, ArregloDinamico<VOMovingViolations>> agregarLinearProbing(Comparable<VOMovingViolations>[] temporal){
+
+		ArregloDinamico<VOMovingViolations> r=new ArregloDinamico<VOMovingViolations>(6);
+		for(int i=0;i<temporal.length-1;i++)
 		{
-			VOMovingViolations actual=(VOMovingViolations) temp[i];
-			int IDactual=actual.darAddressID();
-			if(ID==IDactual)
-			{
+			
+			VOMovingViolations actual=(VOMovingViolations) temporal[i];
+			if(actual.darAddressID() - ((VOMovingViolations) temporal[i+1]).darAddressID() == 0) {
 				r.agregar(actual);
 			}
-			else
+			else if(actual.darAddressID() - ((VOMovingViolations) temporal[i+1]).darAddressID() != 0)
 			{
-				linear.put(ID, r);
-				separate.put(ID, r);
-				r=new ArregloDinamico<>(6);
-				ID=IDactual;
+				r.agregar(actual);
+				linear.put(actual.darAddressID(), r);
+				r=null;
+				r= new ArregloDinamico<VOMovingViolations>(6);
+				
 			}
 		}	
+		return linear;
 	}
+
+	public SeparateChaining<Integer, ArregloDinamico<VOMovingViolations>> agregarSeparateChaining(Comparable<VOMovingViolations>[] temporal){
+
+		ArregloDinamico<VOMovingViolations> r=new ArregloDinamico<VOMovingViolations>(6);
+		for(int i=0;i<temporal.length-1;i++)
+		{
+			
+			VOMovingViolations actual=(VOMovingViolations) temporal[i];
+			if(actual.darAddressID() - ((VOMovingViolations) temporal[i+1]).darAddressID() == 0) {
+				r.agregar(actual);
+			}
+			else if(actual.darAddressID() - ((VOMovingViolations) temporal[i+1]).darAddressID() != 0)
+			{
+				r.agregar(actual);
+				separate.put(actual.darAddressID(), r);
+				r=null;
+				r= new ArregloDinamico<VOMovingViolations>(6);
+				
+			}
+		}	
+		return separate;
+	}
+	public ArregloDinamico<VOMovingViolations> buscarLinear(int pAddressID){
+
+		return linear.get(pAddressID);
+		
+	}
+	public ArregloDinamico<VOMovingViolations> buscarSeparate(int pAddressID2){
+		return separate.get(pAddressID2);
+	}
+	
 	public int loadMovingViolations() {
 		int obID = 0;
 		String loc = null;
