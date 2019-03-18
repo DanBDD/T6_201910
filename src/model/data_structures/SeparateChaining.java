@@ -60,7 +60,7 @@ public class SeparateChaining<K extends Comparable <K>, V> implements IHash<K,V>
 		}
 
 		// double table size if average length of list >= 10
-		if (n >= 6*m) resize(2*m);
+		if (n >= 5*m) resize(2*m);
 
 		int i = hash(k);
 		if (!st[i].contains(k)) n++;

@@ -22,8 +22,8 @@ public class LinearProbing<K extends Comparable <K>, V> implements IHash<K,V>{
     public LinearProbing(int capacity) {
         m = capacity;
         n = 0;
-        keys = (K[])   new Comparable[m];
-        vals = (V[]) new Comparable[m];
+        keys = (K[]) new Object[m];
+        vals = (V[]) new Object[m];
     }
 
     /**
@@ -59,7 +59,7 @@ public class LinearProbing<K extends Comparable <K>, V> implements IHash<K,V>{
 
 	@Override
 	public void put(K k, V v) {
-		 if (k == null) throw new IllegalArgumentException();
+		 if (k == null) return;
 
 	        if (v == null) {
 	            delete(k);
@@ -67,7 +67,7 @@ public class LinearProbing<K extends Comparable <K>, V> implements IHash<K,V>{
 	        }
 
 	        // double table size if 50% full
-	        if (n >= m/2) resize(2*m);
+	        if (n >=(double) 0.75*m) resize(2*m);
 
 	        int i;
 	        for (i = hash(k); keys[i] != null; i = (i + 1) % m) {

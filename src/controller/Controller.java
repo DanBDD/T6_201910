@@ -72,9 +72,9 @@ public class Controller {
 
 	public Controller() {
 		view = new MovingViolationsManagerView();
-		arreglo=new ArregloDinamico<VOMovingViolations>(160000);
-		linear= new LinearProbing<>(101);
-		separate =new SeparateChaining<>(101);
+		arreglo=new ArregloDinamico<VOMovingViolations>(5);
+		linear= new LinearProbing<Integer, ArregloDinamico<VOMovingViolations>>(101);
+		separate =new SeparateChaining<Integer, ArregloDinamico<VOMovingViolations>>(101);
 	}
 
 	public void run() {
@@ -132,7 +132,8 @@ public class Controller {
 		Sort.ordenarMergeSort(temp, Comparaciones.ADDRESSID.comparador , true);
 		VOMovingViolations a=(VOMovingViolations) temp[0];
 		int ID=a.darAddressID();
-		ArregloDinamico<VOMovingViolations> r=new ArregloDinamico<>(1);
+		ArregloDinamico<VOMovingViolations> r=new ArregloDinamico<>(6);
+		int contador=0;
 		for(int i=0;i<temp.length;i++)
 		{
 			VOMovingViolations actual=(VOMovingViolations) temp[i];
@@ -143,14 +144,15 @@ public class Controller {
 			}
 			else
 			{
+				contador++;
 				linear.put(ID, r);
 				separate.put(ID, r);
-				r=new ArregloDinamico<>(1);
+				r=new ArregloDinamico<>(6);
 				ID=IDactual;
 			}
-		}		
+		}	
+		System.out.println("T"+contador);
 	}
-
 	public int loadMovingViolations() {
 		int obID = 0;
 		String loc = null;
