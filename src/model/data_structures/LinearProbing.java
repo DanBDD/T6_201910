@@ -22,7 +22,7 @@ public class LinearProbing<K extends Comparable <K>, V> implements IHash<K,V>{
     public LinearProbing(int capacity) {
         m = capacity;
         n = 0;
-        keys = (K[]) new Object[m];
+        keys = (K[]) new Comparable[m];
         vals = (V[]) new Object[m];
     }
 

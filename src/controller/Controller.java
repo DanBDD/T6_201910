@@ -92,9 +92,11 @@ public class Controller {
 			case 0:
 				nDatos = this.loadMovingViolations();
 				view.printMessage("Datos cargados, total de datos: " + nDatos);
-				
+
 				//Funciona el cargar y estan ordenadas.
 				this.agregarHash(nDatos);
+				System.out.println("L"+linear.size());
+				System.out.println("S"+separate.size());
 				break;
 				//							case 1:
 				//								view.printMessage("Ingresar AdressID: ");
@@ -121,19 +123,29 @@ public class Controller {
 		}
 	}
 	private void agregarHash(int n) {
-		Comparable<VOMovingViolations>[] temp = new Comparable[n];	
 
-		int pos=0;
-		while(pos<n)
+		int contador=0;
+		for(int i=0;i<arreglo.darTamano();i++)
 		{
-			temp[pos] = arreglo.darElem(pos);
-			pos++;
+			if(arreglo.darElem(i).darIndicator().equals("Yes"))
+			{
+				contador++;
+			}
+		}
+		Comparable<VOMovingViolations>[] temp = new Comparable[contador];
+		int pos=0;
+		for(int i=0;i<arreglo.darTamano();i++)
+		{
+			if(arreglo.darElem(i).darIndicator().equals("Yes"))
+			{
+				temp[pos] = arreglo.darElem(i);
+				pos++;
+			}
 		}
 		Sort.ordenarMergeSort(temp, Comparaciones.ADDRESSID.comparador , true);
 		VOMovingViolations a=(VOMovingViolations) temp[0];
 		int ID=a.darAddressID();
 		ArregloDinamico<VOMovingViolations> r=new ArregloDinamico<>(6);
-		int contador=0;
 		for(int i=0;i<temp.length;i++)
 		{
 			VOMovingViolations actual=(VOMovingViolations) temp[i];
@@ -144,14 +156,12 @@ public class Controller {
 			}
 			else
 			{
-				contador++;
 				linear.put(ID, r);
 				separate.put(ID, r);
 				r=new ArregloDinamico<>(6);
 				ID=IDactual;
 			}
 		}	
-		System.out.println("T"+contador);
 	}
 	public int loadMovingViolations() {
 		int obID = 0;
@@ -161,6 +171,7 @@ public class Controller {
 		int amt = 0;
 		String date = null;
 		String code = null;
+		String accID=null;
 		JsonParser parser = new JsonParser();
 		try{
 			JsonArray ja = (JsonArray) parser.parse(new FileReader(rutaEnero));
@@ -191,9 +202,12 @@ public class Controller {
 				if(actual.get("VIOLATIONCODE") != null){
 					code = actual.get("VIOLATIONCODE").getAsString();
 				}
+				if(actual.get("ACCIDENTINDICATOR") != null){
+					accID= actual.get("ACCIDENTINDICATOR").getAsString();			
+				}
 
 				if(obID != 0 && loc != null && addID != -1 && amt != 0 && date !=null && code != null){
-					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code));
+					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code,accID));
 
 				}
 			}
@@ -226,8 +240,12 @@ public class Controller {
 					code = actual.get("VIOLATIONCODE").getAsString();
 				}
 
+				if(actual.get("ACCIDENTINDICATOR") != null){
+					accID= actual.get("ACCIDENTINDICATOR").getAsString();			
+				}
+
 				if(obID != 0 && loc != null && addID != -1 && amt != 0 && date !=null && code != null){
-					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code));
+					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code,accID));
 
 				}
 			}
@@ -260,8 +278,12 @@ public class Controller {
 					code = actual.get("VIOLATIONCODE").getAsString();
 				}
 
+				if(actual.get("ACCIDENTINDICATOR") != null){
+					accID= actual.get("ACCIDENTINDICATOR").getAsString();			
+				}
+
 				if(obID != 0 && loc != null && addID != -1 && amt != 0 && date !=null && code != null){
-					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code));
+					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code,accID));
 
 				}
 			}
@@ -294,8 +316,12 @@ public class Controller {
 					code = actual.get("VIOLATIONCODE").getAsString();
 				}
 
+				if(actual.get("ACCIDENTINDICATOR") != null){
+					accID= actual.get("ACCIDENTINDICATOR").getAsString();			
+				}
+
 				if(obID != 0 && loc != null && addID != -1 && amt != 0 && date !=null && code != null){
-					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code));
+					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code,accID));
 
 				}
 			}
@@ -328,8 +354,12 @@ public class Controller {
 					code = actual.get("VIOLATIONCODE").getAsString();
 				}
 
+				if(actual.get("ACCIDENTINDICATOR") != null){
+					accID= actual.get("ACCIDENTINDICATOR").getAsString();			
+				}
+
 				if(obID != 0 && loc != null && addID != -1 && amt != 0 && date !=null && code != null){
-					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code));
+					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code,accID));
 
 				}
 			}
@@ -362,8 +392,12 @@ public class Controller {
 					code = actual.get("VIOLATIONCODE").getAsString();
 				}
 
+				if(actual.get("ACCIDENTINDICATOR") != null){
+					accID= actual.get("ACCIDENTINDICATOR").getAsString();			
+				}
+
 				if(obID != 0 && loc != null && addID != -1 && amt != 0 && date !=null && code != null){
-					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code));
+					arreglo.agregar(new VOMovingViolations(obID, loc, addID, amt, date, code,accID));
 
 				}
 			}

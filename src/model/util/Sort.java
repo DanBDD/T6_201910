@@ -40,6 +40,10 @@ public class Sort {
 
 		// TODO implementar el algoritmo MergeSort
 		aux = new Comparable[datos.length];    // Allocate space just once.
+		System.out.println("--------");
+		System.out.println(datos);
+		System.out.println(datos.length-1);
+		System.out.println(comparador);
 		sort(datos, 0, datos.length - 1, comparador,b);
 	}
 	private static void sort(Comparable[] a, int lo, int hi, Comparator comparador, boolean b)

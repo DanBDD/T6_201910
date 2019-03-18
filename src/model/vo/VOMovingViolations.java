@@ -42,6 +42,7 @@ public class VOMovingViolations implements Comparable<VOMovingViolations>{
 	 * Atributo que da la localizacion de la infraccion
 	 */
 	private String location;
+	private String ind;
 	/**
 	 * Constructor VOMovingViolations
 	 * @param pLocation localizacion de la infraccion
@@ -49,7 +50,7 @@ public class VOMovingViolations implements Comparable<VOMovingViolations>{
 	 * @param pAddress direccion de la infracci�n
 
 	 */
-	public VOMovingViolations(int pObjID, String pLoc, int pAddID, int pAMT, String pDate, String pCode){
+	public VOMovingViolations(int pObjID, String pLoc, int pAddID, int pAMT, String pDate, String pCode, String in){
 
 		objectID = pObjID;
 		location = pLoc;
@@ -57,6 +58,7 @@ public class VOMovingViolations implements Comparable<VOMovingViolations>{
 		fineAMT = pAMT;
 		ticketIssueDate = pDate;
 		violationCode = pCode;
+		ind=in;
 
 	}
 
@@ -78,6 +80,10 @@ public class VOMovingViolations implements Comparable<VOMovingViolations>{
 	}
 	public int darObjectID(){
 		return objectID;
+	}
+	public String darIndicator()
+	{
+		return ind;
 	}
 	private static LocalDateTime convertirFecha_Hora_LDT(String fechaHora)
 	{
