@@ -9,27 +9,27 @@ import model.data_structures.SeparateChaining;
 
 public class TestSeparateChaining extends TestCase{
 
-	protected SeparateChaining<String, Integer> linear;
+	protected SeparateChaining<String, Integer> separate;
 	@Before
 	public void setUp()
 	{
-		linear=new SeparateChaining<>(101);
+		separate=new SeparateChaining<>(101);
 		System.out.println("TestSeparateChaining");
 		int contador=0;
-		while(linear.keys().hasNext())
+		while(separate.keys().hasNext())
 		{
 			contador++;
 		}
 		assertEquals(contador, 0);
 		System.out.println("Tamaño del arreglo inicial: "+contador);
-		int inic=linear.m();
+		int inic=separate.m();
 		int cambios=0;
 		for(int i=0;i<10000;i++)
 		{
-			linear.put(Integer.toString(i), i);
-			if(linear.m()!=inic)
+			separate.put(Integer.toString(i), i);
+			if(separate.m()!=inic)
 			{
-				inic=linear.m();
+				inic=separate.m();
 				cambios++;
 			}
 		}
@@ -38,20 +38,13 @@ public class TestSeparateChaining extends TestCase{
 	@Test
 	public void testSize()
 	{
-		//Tamaño final arreglo
-		//		int contador2=0;
-		//		while(linear.keys().hasNext())
-		//		{
-		//			System.out.println("Inside");
-		//			contador2++;
-		//		}
-		//		assertEquals(contador2, 9999);
-		System.out.println("Numero de duplas: "+linear.size());
-		System.out.println("Factor de carga final: "+(double)linear.size()/linear.m());
+		System.out.println("Tama�o final del arreglo: "+separate.size());
+		System.out.println("Numero de duplas: "+separate.size());
+		System.out.println("Factor de carga final: "+(double)separate.size()/separate.m());
 		long startTime = System.currentTimeMillis();
 		for(int i=0;i<10000;i++)
 		{
-			int v=linear.get(Integer.toString(i));
+			int v=separate.get(Integer.toString(i));
 		}
 		long endTime = System.currentTimeMillis();
 		long duration = endTime - startTime;

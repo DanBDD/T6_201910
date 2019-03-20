@@ -34,10 +34,10 @@ public class MovingViolationsManagerView
 		System.out.println(mensaje);
 	}
 
-	public void printBusqueda(ArregloDinamico<VOMovingViolations> param) {
-		System.out.println("Resultados de búsqueda: " + param.darTamano());
-		for(int i = 0; i<param.darTamano(); i++) {
-			VOMovingViolations actual = param.darElem(i);
+	public void printBusqueda(Comparable<VOMovingViolations>[] param) {
+		System.out.println("Resultados de bï¿½squeda: " + param.length);
+		for(int i = 0; i<param.length; i++) {
+			VOMovingViolations actual = (VOMovingViolations)param[i];
 			System.out.println("Datos: OBJECTID: " + actual.darObjectID() + " LOCATION: " + actual.darLocation() +
 					" TICKETISSUEDATE: " + actual.darFecha() + " VIOLATIONCODE: " +actual.darViolationCode() + " FINEAMT: " + actual.darAMT());
 		}
